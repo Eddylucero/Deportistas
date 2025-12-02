@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Deportistas;
 
 class Pais extends Model
 {
@@ -11,4 +12,9 @@ class Pais extends Model
     public $timestamps = false;
 
     protected $fillable = ['nombrepais'];
+
+    public function deportistas()
+    {
+        return $this->hasMany(Deportistas::class, 'idpais', 'idpais');
+    }
 }

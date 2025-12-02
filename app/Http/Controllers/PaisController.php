@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Pais;
 
 use Illuminate\Http\Request;
 
@@ -11,7 +12,8 @@ class PaisController extends Controller
      */
     public function index()
     {
-        return view('paises.index');
+        $paises = Pais::all();
+        return view('paises.index', compact('paises'));
     }
 
     /**
@@ -19,7 +21,7 @@ class PaisController extends Controller
      */
     public function create()
     {
-        //
+        return view('paises.nuevopais');
     }
 
     /**
@@ -27,7 +29,25 @@ class PaisController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombrepais' => 'required|min:2|max:100'
+        ]);
+        $nombre = strtolower(trim($request->nombrepais));
+
+        $existe = Pais::whereRaw('LOWER(nombrepais) = ?', [$nombre])->first();
+
+        if ($existe) {
+            return redirect()->back()
+                ->withErrors(['nombrepais' => 'El país ya está registrado.'])
+                ->withInput();
+        }
+
+        Pais::create([
+            'nombrepais' => trim($request->nombrepais),
+        ]);
+
+        return redirect()->route('paises.index')
+            ->with('success', 'País registrado correctamente.');
     }
 
     /**
@@ -43,7 +63,8 @@ class PaisController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $pais = Pais::findOrFail($id);
+        return view('paises.editarpais', compact('pais'));
     }
 
     /**
@@ -51,14 +72,41 @@ class PaisController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $nombre = trim($request->nombrepais);
+        $existe = Pais::whereRaw('LOWER(nombrepais) = ?', [strtolower($nombre)])
+                    ->where('idpais', '!=', $id)
+                    ->exists();
+
+        if ($existe) {
+            return redirect()->back()
+                ->withErrors(['nombrepais' => 'El país ya existe en la base de datos.'])
+                ->withInput();
+        }
+
+        $pais = Pais::findOrFail($id);
+        $pais->nombrepais = $nombre;
+        $pais->save();
+
+        return redirect()->route('paises.index')
+                        ->with('success', 'País actualizado correctamente');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $pais = Pais::findOrFail($id);
+
+        if ($pais->deportistas()->count() > 0) {
+            return redirect()->route('paises.index')
+                ->with('error', 'No se puede eliminar el país porque tiene deportistas registrados.');
+        }
+
+        $pais->delete();
+
+        return redirect()->route('paises.index')
+            ->with('success', 'País eliminado correctamente.');
     }
 }

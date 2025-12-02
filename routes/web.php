@@ -27,6 +27,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // CRUDS
-Route::resource('pais', PaisController::class);
-Route::resource('disciplina', DisciplinaController::class);
-Route::resource('deportista', DeportesController::class);
+Route::resource('paises', PaisController::class);
+Route::resource('disciplinas', DisciplinaController::class);
+Route::resource('deportistas', DeportesController::class);

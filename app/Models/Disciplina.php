@@ -11,4 +11,9 @@ class Disciplina extends Model
     public $timestamps = false;
 
     protected $fillable = ['nombredisciplina'];
+
+    public function deportistas()
+    {
+        return $this->hasMany(Deportista::class, 'iddisciplina', 'iddisciplina');
+    }
 }

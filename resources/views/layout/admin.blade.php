@@ -68,7 +68,7 @@
             </li>
 
             <li class="sidebar-item">
-              <a class="sidebar-link primary-hover-bg" href="{{ route('pais.index') }}" aria-expanded="false">
+              <a class="sidebar-link primary-hover-bg" href="{{ route('paises.index') }}" aria-expanded="false">
                 <iconify-icon icon="solar:flag-line-duotone"></iconify-icon>
                 <span class="hide-menu">Países</span>
               </a>
