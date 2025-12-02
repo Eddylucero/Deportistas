@@ -12,16 +12,21 @@
 
   <style>
     body {
-      background: linear-gradient(to bottom right, #e3f2fd, #bbdefb);
+      /* Fondo deportivo consistente con las demás pantallas */
+      background: linear-gradient(135deg, #2196f3, #43a047);
       font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .card {
-      border-radius: 18px;
-      border: 1px solid #90caf9;
-      box-shadow: 0 10px 30px rgba(33, 150, 243, 0.1);
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
       animation: fadeInUp 0.6s ease;
-      background: white;
     }
 
     @keyframes fadeInUp {
@@ -29,17 +34,21 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    h4 {
+      color: #1976d2;
+      font-weight: bold;
+    }
+
     .btn-primary {
-      background-color: #1976d2;
+      background: linear-gradient(90deg, #1976d2, #43a047);
       border: none;
       font-weight: bold;
       border-radius: 50px;
       transition: all 0.3s ease;
     }
-
     .btn-primary:hover {
-      background-color: #1565c0;
-      box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+      background: linear-gradient(90deg, #1565c0, #2e7d32);
+      box-shadow: 0 4px 12px rgba(25,118,210,0.3);
     }
 
     .form-control {
@@ -47,19 +56,17 @@
       border: 1px solid #bbdefb;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
-
     .form-control:focus {
-      border-color: #1976d2;
-      box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+      border-color: #43a047;
+      box-shadow: 0 0 0 0.2rem rgba(67,160,71,0.25);
     }
 
     .error {
-      color: red;
+      color: #d32f2f;
       font-size: 14px;
     }
-
     .form-control.error {
-      border: 1px solid red;
+      border: 1px solid #d32f2f;
     }
 
     #loading-overlay {
@@ -76,7 +83,6 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-
     #loading-overlay.d-flex {
       display: flex;
       opacity: 1;
@@ -90,7 +96,6 @@
       height: 80px;
       animation: spin 1s linear infinite;
     }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -107,70 +112,60 @@
     <div class="spinner"></div>
   </div>
 
-  <div class="page-wrapper min-vh-100 d-flex align-items-center justify-content-center">
-    <div class="card shadow p-5" style="width: 540px;">
-      <div class="card-body">
-        <div class="text-center mb-4">
-          <i class="fas fa-medal fa-3x mb-3 sport-icon"></i>
-          <h4 class="mt-2 fw-bold text-dark">Registro Deportivo</h4>
-          <p class="text-muted">Únete a nuestro sistema deportivo</p>
+  <div class="card shadow p-5" style="width: 540px;">
+    <div class="card-body">
+      <div class="text-center mb-4">
+        <i class="fas fa-medal fa-3x mb-3 sport-icon"></i>
+        <h4 class="mt-2 fw-bold text-dark">Registro Deportivo</h4>
+        <p class="text-muted">Únete a nuestro sistema deportivo</p>
+      </div>
+
+      @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+      @endif
+
+      @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+        <script>
+          $(document).ready(function() {
+            $("#loading-overlay").removeClass("d-flex").fadeOut();
+          });
+        </script>
+      @endif
+
+      <form id="RegisterForm" method="POST" action="{{ route('register.post') }}">
+        @csrf
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Nombre completo</label>
+          <input type="text" name="name" class="form-control" placeholder="Tu nombre completo">
         </div>
 
-        @if(session('success'))
-          <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+        <div class="mb-3">
+          <label class="form-label fw-bold">Correo electrónico</label>
+          <input type="email" name="email" class="form-control" placeholder="deportista@ejemplo.com">
+        </div>
 
-        @if(session('error'))
-          <div class="alert alert-danger">{{ session('error') }}</div>
-          <script>
-            $(document).ready(function() {
-              $("#loading-overlay").removeClass("d-flex").fadeOut();
-            });
-          </script>
-        @endif
+        <div class="mb-3">
+          <label class="form-label fw-bold">Contraseña</label>
+          <input type="password" name="password" class="form-control" placeholder="Mínimo 6 caracteres">
+        </div>
 
-        <form id="RegisterForm" method="POST" action="{{ route('register.post') }}">
-          @csrf
+        <div class="mb-4">
+          <label class="form-label fw-bold">Confirmar contraseña</label>
+          <input type="password" name="password_confirmation" class="form-control" placeholder="Repite tu contraseña">
+        </div>
 
-          <div class="mb-3">
-            <label class="form-label">
-              <i class="fa-solid fa-user me-2 sport-icon"></i>Nombre completo
-            </label>
-            <input type="text" name="name" class="form-control" placeholder="Tu nombre completo">
-          </div>
+        <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
+          <i class="fa-solid fa-user-plus me-2"></i>Registrarse
+        </button>
 
-          <div class="mb-3">
-            <label class="form-label">
-              <i class="fa-solid fa-envelope me-2 sport-icon"></i>Correo electrónico
-            </label>
-            <input type="email" name="email" class="form-control" placeholder="deportista@ejemplo.com">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">
-              <i class="fa-solid fa-lock me-2 sport-icon"></i>Contraseña
-            </label>
-            <input type="password" name="password" class="form-control" placeholder="Mínimo 6 caracteres">
-          </div>
-
-          <div class="mb-4">
-            <label class="form-label">
-              <i class="fa-solid fa-key me-2 sport-icon"></i>Confirmar contraseña
-            </label>
-            <input type="password" name="password_confirmation" class="form-control" placeholder="Repite tu contraseña">
-          </div>
-
-          <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
-            <i class="fa-solid fa-user-plus me-2"></i>Registrarse
-          </button>
-
-          <div class="text-center">
-            <p class="mb-0">¿Ya tienes cuenta?
-              <a class="text-primary fw-bold" href="{{ route('login') }}">Inicia sesión</a>
-            </p>
-          </div>
-        </form>
-      </div>
+        <div class="text-center">
+          <p class="mb-0">¿Ya tienes cuenta?
+            <a class="text-primary fw-bold" href="{{ route('login') }}">Inicia sesión</a>
+          </p>
+        </div>
+      </form>
     </div>
   </div>
 

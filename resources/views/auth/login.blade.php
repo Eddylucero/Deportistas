@@ -12,16 +12,20 @@
 
   <style>
     body {
-      background: linear-gradient(to bottom right, #e3f2fd, #bbdefb);
+      background: linear-gradient(135deg, #2196f3, #43a047);
       font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .card {
-      border-radius: 18px;
-      border: 1px solid #90caf9;
-      box-shadow: 0 10px 30px rgba(33, 150, 243, 0.1);
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
       animation: fadeInUp 0.6s ease;
-      background: white;
     }
 
     @keyframes fadeInUp {
@@ -29,37 +33,53 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    h4 {
+      color: #1976d2;
+      font-weight: bold;
+    }
+
     .btn-primary {
-      background-color: #1976d2;
+      background: linear-gradient(90deg, #1976d2, #43a047);
       border: none;
       font-weight: bold;
       border-radius: 50px;
       transition: all 0.3s ease;
     }
-
     .btn-primary:hover {
-      background-color: #1565c0;
-      box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+      background: linear-gradient(90deg, #1565c0, #2e7d32);
+      box-shadow: 0 4px 12px rgba(25,118,210,0.3);
     }
 
     .form-control {
       border-radius: 12px;
       border: 1px solid #bbdefb;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      padding-right: 40px; /* espacio para el ojito */
+    }
+    .form-control:focus {
+      border-color: #43a047;
+      box-shadow: 0 0 0 0.2rem rgba(67,160,71,0.25);
     }
 
-    .form-control:focus {
-      border-color: #1976d2;
-      box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+    .password-wrapper {
+      position: relative;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #1976d2;
     }
 
     .error {
-      color: red;
-      font-size: 14px;
+      color: #d32f2f;
+      font-size: 13px;
+      margin-top: 4px;
     }
-
     .form-control.error {
-      border: 1px solid red;
+      border: 1px solid #d32f2f;
     }
 
     #loading-overlay {
@@ -76,7 +96,6 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-
     #loading-overlay.d-flex {
       display: flex;
       opacity: 1;
@@ -90,14 +109,9 @@
       height: 80px;
       animation: spin 1s linear infinite;
     }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
-    }
-
-    .sport-icon {
-      color: #1976d2;
     }
   </style>
 </head>
@@ -107,56 +121,45 @@
     <div class="spinner"></div>
   </div>
 
-  <div class="page-wrapper min-vh-100 d-flex align-items-center justify-content-center">
-    <div class="card shadow p-5" style="width: 520px;">
-      <div class="card-body">
-        <div class="text-center mb-4">
-          <i class="fas fa-running fa-3x mb-3 sport-icon"></i>
-          <h4 class="mt-2 fw-bold text-dark">Iniciar Sesión</h4>
-          <p class="text-muted">Bienvenido al Sistema Deportivo</p>
+  <div class="card shadow p-5" style="width: 520px;">
+    <div class="card-body">
+      <div class="text-center mb-4">
+        <h4 class="mt-2">Iniciar Sesión</h4>
+        <p class="text-muted">Bienvenido al <span style="color:#43a047;font-weight:bold;">Sistema Deportivo</span></p>
+      </div>
+
+      <form id="LoginForm" method="POST" action="{{ route('login.post') }}">
+        @csrf
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Correo electrónico</label>
+          <input type="email" name="email" class="form-control" placeholder="deportista@ejemplo.com">
         </div>
 
-        @if(session('success'))
-          <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-
-        @if(session('error'))
-          <div class="alert alert-danger">{{ session('error') }}</div>
-          <script>
-            $(document).ready(function() {
-              $("#loading-overlay").removeClass("d-flex").fadeOut();
-            });
-          </script>
-        @endif
-
-        <form id="LoginForm" method="POST" action="{{ route('login.post') }}">
-          @csrf
-
-          <div class="mb-3">
-            <label class="form-label">
-              <i class="fa-solid fa-envelope me-2 sport-icon"></i>Correo electrónico
-            </label>
-            <input type="email" name="email" class="form-control" placeholder="deportista@ejemplo.com">
+        <div class="mb-4">
+          <label class="form-label fw-bold">Contraseña</label>
+          <div class="password-wrapper">
+            <input type="password" name="password" id="password" class="form-control" placeholder="Tu contraseña">
+            <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
           </div>
+        </div>
 
-          <div class="mb-4">
-            <label class="form-label">
-              <i class="fa-solid fa-lock me-2 sport-icon"></i>Contraseña
-            </label>
-            <input type="password" name="password" class="form-control" placeholder="Tu contraseña">
-          </div>
-
-          <button type="submit" class="btn btn-primary w-100 py-2">
+        <button type="submit" class="btn btn-primary w-100 py-2">
             <i class="fa-solid fa-right-to-bracket me-2"></i>Ingresar al Sistema
-          </button>
+        </button>
 
-          <div class="text-center mt-4">
+        <div class="text-center mt-3">
+            <a class="text-primary fw-bold" href="{{ route('password.request') }}">
+                ¿Olvidaste tu contraseña?
+            </a>
+        </div>
+
+        <div class="text-center mt-4">
             <p class="mb-0">¿No tienes cuenta?
               <a class="text-primary fw-bold" href="{{ route('register') }}">Regístrate aquí</a>
             </p>
-          </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -174,6 +177,15 @@
         $("#loading-overlay").addClass("d-flex").fadeIn();
         form.submit();
       }
+    });
+    const togglePassword = document.querySelector("#togglePassword");
+    const password = document.querySelector("#password");
+
+    togglePassword.addEventListener("click", function () {
+      const type = password.getAttribute("type") === "password" ? "text" : "password";
+      password.setAttribute("type", type);
+      this.classList.toggle("fa-eye");
+      this.classList.toggle("fa-eye-slash");
     });
   </script>
 </body>

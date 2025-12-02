@@ -6,6 +6,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaisController;
 use App\Http\Controllers\DisciplinaController;
 use App\Http\Controllers\DeportesController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 
 Route::get('/', function () {
@@ -31,3 +33,23 @@ Route::middleware('auth')->group(function () {
     Route::resource('disciplinas', DisciplinaController::class);
     Route::resource('deportistas', DeportesController::class);
 });
+
+
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
+    ->name('password.request');
+
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetCode'])
+    ->name('password.email');
+
+Route::get('/verify-code', [ResetPasswordController::class, 'showVerifyForm'])
+    ->name('password.verify');
+
+Route::post('/verify-code', [ResetPasswordController::class, 'verifyCode'])
+    ->name('password.verify.post');
+
+Route::get('/reset-password', [ResetPasswordController::class, 'showResetForm'])
+    ->name('password.reset.form');
+
+Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])
+    ->name('password.update');
+
