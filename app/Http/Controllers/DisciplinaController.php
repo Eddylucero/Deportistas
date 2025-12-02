@@ -11,7 +11,7 @@ class DisciplinaController extends Controller
      */
     public function index()
     {
-        //
+        return view('disciplinas.index');
     }
 
     /**

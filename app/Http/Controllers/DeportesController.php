@@ -11,7 +11,7 @@ class DeportesController extends Controller
      */
     public function index()
     {
-        //
+        return view('deportistas.index');
     }
 
     /**
