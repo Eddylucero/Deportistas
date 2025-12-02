@@ -40,4 +40,30 @@ class ForgotPasswordController extends Controller
             ->with('email', $request->email)
             ->with('success', 'Código enviado a tu correo.');
     }
+    public function resendCode($email)
+    {
+        $userExists = DB::table('users')->where('email', $email)->exists();
+
+        if (!$userExists) {
+            return redirect()->back()->with('error', 'El correo no existe.');
+        }
+
+        $code = rand(100000, 999999);
+
+        DB::table('password_resets')->updateOrInsert(
+            ['email' => $email],
+            [
+                'token' => $code,
+                'created_at' => Carbon::now()
+            ]
+        );
+
+        Mail::raw("Tu nuevo código de recuperación es: $code", function ($msg) use ($email) {
+            $msg->to($email)->subject('Nuevo código de recuperación');
+        });
+
+        return redirect()->route('password.verify')
+            ->with('email', $email)
+            ->with('success', 'Nuevo código enviado a tu correo.');
+    }
 }

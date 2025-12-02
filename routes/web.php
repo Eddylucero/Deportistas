@@ -53,3 +53,7 @@ Route::get('/reset-password', [ResetPasswordController::class, 'showResetForm'])
 Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])
     ->name('password.update');
 
+Route::get('/password/resend/{email}', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'resendCode'])
+    ->name('password.resend');
+
+

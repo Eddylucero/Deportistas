@@ -119,6 +119,11 @@ Swal.fire({
       <button class="btn btn-primary w-100 py-2">
         Verificar
       </button>
+      <div class="text-center mt-3">
+        <a href="{{ route('password.resend', ['email' => session('email')]) }}" class="text-primary fw-bold">
+            Volver a enviar el código
+        </a>
+      </div>
     </form>
   </div>
 </div>
@@ -166,6 +171,28 @@ Swal.fire({
     }
   });
 </script>
+
+@if(session('success'))
+<script>
+Swal.fire({
+    title: "Éxito",
+    text: "{{ session('success') }}",
+    icon: "success",
+    confirmButtonText: "Aceptar"
+});
+</script>
+@endif
+
+@if(session('error'))
+<script>
+Swal.fire({
+    title: "Error",
+    text: "{{ session('error') }}",
+    icon: "error",
+    confirmButtonText: "Aceptar"
+});
+</script>
+@endif
 
 </body>
 </html>
