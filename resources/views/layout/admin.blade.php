@@ -75,14 +75,14 @@
             </li>
             
             <li class="sidebar-item">
-              <a class="sidebar-link primary-hover-bg" href="{{ route('disciplina.index') }}" aria-expanded="false">
+              <a class="sidebar-link primary-hover-bg" href="{{ route('disciplinas.index') }}" aria-expanded="false">
                 <iconify-icon icon="solar:dumbbell-line-duotone"></iconify-icon>
                 <span class="hide-menu">Disciplinas</span>
               </a>
             </li>
             
             <li class="sidebar-item">
-              <a class="sidebar-link primary-hover-bg" href="{{ route('deportista.index') }}" aria-expanded="false">
+              <a class="sidebar-link primary-hover-bg" href="{{ route('deportistas.index') }}" aria-expanded="false">
                 <iconify-icon icon="solar:running-line-duotone"></iconify-icon>
                 <span class="hide-menu">Deportistas</span>
               </a>

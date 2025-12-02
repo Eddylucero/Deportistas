@@ -49,7 +49,7 @@
     </div>
 </div>
 
-{{-- DATATABLE --}}
+
 <script>
     $(document).ready(function() {
         new DataTable('#tablePaises', {
@@ -60,7 +60,7 @@
     });
 </script>
 
-{{-- SWEETALERT CONFIRMACIÓN ELIMINAR --}}
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.btn-eliminar').forEach(button => {

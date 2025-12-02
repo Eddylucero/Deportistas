@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class Disciplina extends Model
 {
     protected $table = 'disciplina';
@@ -12,8 +13,9 @@ class Disciplina extends Model
 
     protected $fillable = ['nombredisciplina'];
 
-    public function deportistas()
+    public function deportista()
     {
-        return $this->hasMany(Deportista::class, 'iddisciplina', 'iddisciplina');
+        return $this->hasMany(\App\Models\Deportistas::class, 'iddisciplina', 'iddisciplina');
     }
+
 }

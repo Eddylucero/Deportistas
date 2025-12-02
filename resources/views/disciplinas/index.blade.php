@@ -62,29 +62,30 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.btn-eliminar').forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.preventDefault();
+document.addEventListener('click', function(e) {
 
-            Swal.fire({
-                title: '¿Eliminar esta disciplina?',
-                text: 'Esta acción no se puede deshacer.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    this.closest('form').submit();
-                }
-            });
+    if (e.target.closest('.btn-eliminar')) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: '¿Eliminar esta disciplina?',
+            text: 'Esta acción no se puede deshacer.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                e.target.closest('form').submit();
+            }
         });
-    });
+    }
+
 });
 </script>
+
 
 @if(session('success'))
 <script>
