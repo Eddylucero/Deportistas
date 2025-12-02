@@ -123,7 +123,7 @@
               </div>
             </nav>
           </header>
-          <div class="container-fluid py-4">
+          <div class="container-fluid py-2">
             @yield('content')
           </div>
           
@@ -133,7 +133,9 @@
                 <i class="text-warning me-1"></i> Sistema de Administración - Club Deportivo
                 </span>
                 <br>
-                <small style="font-size: 12px; opacity: 0.6;">&copy; {{ date('Y') }} Todos los derechos reservados</small>
+                <small style="font-size: 12px; opacity: 0.6;">&copy; {{ date('Y') }} Todos los derechos reservados</small><br>
+                <span class="badge bg-danger">Laravel {{ app()->version() }}</span><br>
+                <span class="badge bg-info">MySQL</span>
             </div>
             </footer>
         </div>
@@ -179,6 +181,47 @@
     </script>
     @endif
 
+    @if(auth()->check() && session('welcome_shown') !== true)
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                Swal.fire({
+                    html: `
+                        <div class="text-center">
+                            <h4 class="fw-bold">Hola, <span class="text-primary">{{ auth()->user()->name }}</span></h4>
+                            <p class="text-muted">
+                                Has ingresado al sistema de administración deportiva
+                            </p>
+                            <div class="mt-3">
+                                <span class="badge bg-primary px-3 py-2">
+                                    <i class="fas fa-calendar me-1"></i> {{ \Carbon\Carbon::now('America/Guayaquil')->format('d/m/Y') }}
+                                </span>
+                                <span class="badge bg-success px-3 py-2">
+                                    <i class="fas fa-clock me-1"></i> {{ \Carbon\Carbon::now('America/Guayaquil')->format('H:i') }}
+                                </span>
+                            </div>
+                        </div>
+                    `,
+                    icon: 'success',
+                    confirmButtonText: 'Comenzar',
+                    confirmButtonColor: '#1976d2',
+                    width: 450,
+                    timer: 6000,
+                    timerProgressBar: true,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                });
+            }, 500);
+        });
+    </script>
+    
+    @php session()->put('welcome_shown', true); @endphp
+    @endif
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const logoutBtn = document.getElementById('logout-button');
@@ -199,6 +242,8 @@
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            sessionStorage.removeItem('welcome_shown');
+                            
                             const form = document.createElement('form');
                             form.method = 'POST';
                             form.action = "{{ route('logout') }}";
